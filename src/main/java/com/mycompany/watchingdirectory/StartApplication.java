@@ -7,7 +7,7 @@ import java.util.Scanner;
 public class StartApplication {
 
     private Scanner scan;
-    private boolean iniciado = true;
+    private boolean initiated = true;
     private int optionMainMenu;
     public static final int MIN_MENU_OPTION = 1;
     public static final int MAX_MENU_OPTION = 5;
@@ -23,14 +23,11 @@ public class StartApplication {
         directoryConfigFile = new DirectoryConfigFile();
         directoryList = directoryConfigFile.getDirectorysList();
         directoryConfigFile.startWatchingDirectorysList();
-
         scan = new Scanner(System.in);
-
         System.out.println(MsgList.welcomeMsg);
 
-        while (iniciado) {
+        while (initiated) {
             System.out.println(MsgList.mainMenu);
-
             if (checkIntValue(MsgList.errorIntValue))
                 menuOptionSelected(optionMainMenu);
 
@@ -85,8 +82,8 @@ public class StartApplication {
             System.out.println(MsgList.emptyConfigDirFile);
         } else {
             System.out.println("");
-            for (File f : directoryList) {
-                System.out.println("Carpeta -> " + f.getAbsolutePath());
+            for (int i = 0; i < directoryList.size(); i++) {
+                System.out.println(i + ") " + directoryList.get(i).getAbsolutePath());
             }
             System.out.println("");
         }
@@ -97,7 +94,6 @@ public class StartApplication {
         System.out.println(MsgList.requestNewPath);
         Scanner scan = new Scanner(System.in);
         File ruta = new File(scan.next());
-        scan.close();
         if (!directoryConfigFile.addDirectoryConfigFile(ruta.getAbsolutePath(), false)) {
             System.out.println(MsgList.errorNewPath);
             return;
@@ -106,19 +102,49 @@ public class StartApplication {
     }
 
     public void delLocalDirectory() {
-        System.out.println(MsgList.requestDewPath);
+        System.out.println(MsgList.requestDelPath);
         Scanner scan = new Scanner(System.in);
-        File ruta = new File(scan.next());
-        scan.close();
+
+        String respuesta = scan.next();
+        File ruta = new File(respuesta);
+
+        if (isNumeric(respuesta)) {
+
+            int num = Integer.parseInt(respuesta);
+
+            if (num < 0 | num > directoryList.size()) {
+                System.out.println(MsgList.errorDelPathNumber + directoryList.size() + "\n");
+                return;
+            }
+
+            String path = directoryConfigFile.getDirectorysList().get(Integer.parseInt(respuesta)).getAbsolutePath();
+            ruta = new File(path);
+        }
+
         if (!directoryConfigFile.delDirectoryListFilePath(ruta.getAbsolutePath())) {
             System.out.println(MsgList.errorDelPath);
             return;
         }
+
         updateDirectoryListArray();
     }
 
     public void updateDirectoryListArray() {
         directoryList = directoryConfigFile.getDirectorysList();
+    }
+
+    public boolean isNumeric(String number) {
+
+        if (number == null | number.isBlank() | number.equals("")) {
+            return false;
+        }
+
+        try {
+            int check = Integer.parseInt(number) + 1;
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
     }
 
     public void logout() {
@@ -129,7 +155,7 @@ public class StartApplication {
 
             if (response.toLowerCase().equals("si") | response.toLowerCase().equals("s")) {
                 System.out.println(MsgList.exitMsg);
-                iniciado = false;
+                initiated = false;
                 responseOk = false;
                 directoryConfigFile.stotWatchingDirectorysList();
                 break;

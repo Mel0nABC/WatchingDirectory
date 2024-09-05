@@ -52,7 +52,7 @@ public class DirectoryConfigFile {
             return false;
         }
 
-        if (!checkExistDirOnFile(dir) && !delDir) {
+        if (!checkExistDirOnConfigFile(dir) && !delDir) {
             return false;
         }
 
@@ -69,7 +69,7 @@ public class DirectoryConfigFile {
         return true;
     }
 
-    public boolean checkExistDirOnFile(File path) {
+    public boolean checkExistDirOnConfigFile(File path) {
         for (File f : directorysList) {
             if (f.getName().equals(path.getName())) {
                 return false;
@@ -125,7 +125,7 @@ public class DirectoryConfigFile {
             return false;
         }
 
-        if (checkExistDirOnFile(file)) {
+        if (checkExistDirOnConfigFile(file)) {
             return false;
         }
 

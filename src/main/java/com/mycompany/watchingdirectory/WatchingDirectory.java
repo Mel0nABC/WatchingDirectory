@@ -19,8 +19,18 @@ public class WatchingDirectory {
     }
 
     public void setInitialPath(String initialPath) {
+
+        File dir = new File(initialPath);
+        if (!dir.exists()) {
+            System.out.println(
+                    "\n##################################################################################################");
+            System.out.println("## EL DIRECTORIO NO EXISTE --> " + initialPath);
+            System.out.println(
+                    "##################################################################################################1");
+            return;
+        }
         System.out.println(
-                "##################################################################################################");
+                "\n##################################################################################################");
         System.out.println("## INICIAMOS WATCHDIRECTORY EN --> " + initialPath);
         System.out.println(
                 "##################################################################################################");
@@ -58,7 +68,15 @@ public class WatchingDirectory {
     }
 
     public static void stopThreads(String path) {
-        File[] listSubdir = new File(path).listFiles();
+
+        File dir = new File(path);
+
+        if(!dir.exists()){
+            System.out.println("El directorio no existe --> "+dir.getAbsolutePath());
+            return;
+        }
+
+        File[] listSubdir = dir.listFiles();
 
         for (File f : listSubdir) {
             if (!delThead(f.getAbsolutePath())) {

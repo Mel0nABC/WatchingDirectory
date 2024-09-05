@@ -14,6 +14,7 @@ import java.nio.file.WatchService;
 import java.time.format.DateTimeFormatter;
 import java.util.GregorianCalendar;
 
+
 /**
  * Monitorea un directorio específico, controla la actividad en crear, borrar o
  * modificaciones en el interior, tanto de archivos como carpetas.
@@ -24,6 +25,7 @@ public class WatchingDirectoryThread implements Runnable {
     private boolean watchServiceRun = true;
     private String path = "";
     private final String HOME_DIR = System.getProperty("user.dir");
+    private final String LOG_NAME = "log.log";
 
     @Override
     public void run() {
@@ -65,7 +67,6 @@ public class WatchingDirectoryThread implements Runnable {
                             respuesta = "CREATED ON --> " + path + SEPARADOR + event.context();
                         } else if (event.kind() == StandardWatchEventKinds.ENTRY_DELETE) {
                             respuesta = "DELETED ON --> " + path + SEPARADOR + event.context();
-
                         } else if (event.kind() == StandardWatchEventKinds.ENTRY_MODIFY) {
                             respuesta = "MODIFIES ON --> " + path + SEPARADOR + event.context();
                         }
@@ -80,16 +81,15 @@ public class WatchingDirectoryThread implements Runnable {
                 }
             }
 
-        } catch (
-
-        IOException e) {
-            e.printStackTrace();
+        } catch (IOException e) {
+            // e.printStackTrace();
+            System.out.println("Algún error!");
         }
     }
 
     public void writeLog(String activity) {
         FileWriter escribe;
-        File fichero = new File(HOME_DIR);
+        File fichero = new File(HOME_DIR + SEPARADOR + LOG_NAME);
         String date = new GregorianCalendar().toZonedDateTime()
                 .format(DateTimeFormatter.ofPattern("d MMM uuuu - HH:mm:ss"));
         try {
